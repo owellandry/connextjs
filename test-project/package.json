@@ -9,11 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@connextjs/runtime": "workspace:*"
+    "@connextjs/runtime": "^0.0.1"
   },
   "devDependencies": {
-    "@connextjs/dev-server": "workspace:*",
-    "@connextjs/vite-plugin": "workspace:*",
+    "@connextjs/dev-server": "^0.0.1",
+    "@connextjs/vite-plugin": "^0.0.1",
     "vite": "^7.0.0",
     "typescript": "^5.8.3",
     "tailwindcss": "^3.4.0",

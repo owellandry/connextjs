@@ -76,10 +76,14 @@ export default defineConfig({
         console.log(chalk.green(`✨ Proyecto creado exitosamente en ./${dir}`));
         console.log(chalk.cyan(`\n📦 Próximos pasos:`));
         console.log(chalk.white(`   cd ${dir}`));
-        console.log(chalk.white(`   pnpm install`));
-        console.log(chalk.white(`   pnpm run dev`));
+        console.log(chalk.white(`   npm install`));
+        console.log(chalk.white(`   npm run dev`));
         console.log(chalk.cyan(`\n🌐 El servidor estará disponible en:`));
-        console.log(chalk.white(`   http://localhost:${options.port}/\n`));
+        console.log(chalk.white(`   http://localhost:${options.port}/`));
+        console.log(chalk.cyan(`\n🚀 Para desplegar en Vercel:`));
+        console.log(chalk.white(`   1. Conecta tu repositorio a Vercel`));
+        console.log(chalk.white(`   2. El proyecto incluye configuración automática`));
+        console.log(chalk.white(`   3. Vercel detectará Vite automáticamente\n`));
     }
     catch (error) {
         console.error(chalk.red(`\n❌ Error creando el proyecto: ${error}\n`));
