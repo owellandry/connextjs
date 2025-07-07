@@ -1,12 +1,15 @@
 {
-  "name": "@owellandry/connextjs",
-  "version": "0.1.2",
+  "name": "create-connext-app",
+  "version": "1.0.0",
   "description": "Framework completo ConnextJS con todas las herramientas integradas",
   "type": "module",
   "bin": {
-    "create-connext-app": "dist/bin/create-connext-app.js",
-    "connext": "dist/bin/connext.js"
+    "create-connext-app": "dist/bin/create-connext-app.js"
   },
+  "files": [
+    "dist/**/*",
+    "templates/**/*"
+  ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

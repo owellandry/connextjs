@@ -102,14 +102,20 @@ async function createProjectStructure(dir, options) {
             "optimize-images": "connext optimize-images"
         },
         "dependencies": {
-            "@owellandry/connextjs": "^0.1.2"
+            "sharp": "^0.33.0",
+            "imagemin": "^8.0.1",
+            "imagemin-mozjpeg": "^10.0.0",
+            "imagemin-pngquant": "^9.0.2",
+            "imagemin-webp": "^8.0.0"
         },
         "devDependencies": {
             "vite": "^7.0.0",
             "typescript": "^5.8.3",
             "tailwindcss": "^3.4.0",
             "autoprefixer": "^10.4.0",
-            "postcss": "^8.4.0"
+            "postcss": "^8.4.0",
+            "@rollup/pluginutils": "^5.0.0",
+            "terser": "^5.24.0"
         }
     };
     await writeFile(path.join(dir, 'package.json'), JSON.stringify(packageJson, null, 2));
@@ -131,9 +137,12 @@ async function createProjectStructure(dir, options) {
     await ensureDir(path.join(dir, 'src'));
     await ensureDir(path.join(dir, 'public'));
     await ensureDir(path.join(dir, 'src/assets/images'));
+    await ensureDir(path.join(dir, 'utils'));
+    // Copiar archivos de utilidades
+    await copyUtilityFiles(dir);
     // Crear main.ts
     const mainTs = `import "./index.css";
-import { createImageOptimizer } from "@owellandry/connextjs/image";
+import { createImageOptimizer } from "./utils/image-optimizer.js";
 
 // Inicializar optimizador de imágenes
 const imageOptimizer = createImageOptimizer();
@@ -194,20 +203,15 @@ body {
 async function createConfigurations(dir, options) {
     // Vite config con ofuscación
     const viteConfig = `import { defineConfig } from 'vite';
-import { obfuscatorPlugin } from '@owellandry/connextjs/build';
+import { obfuscatorPlugin } from './utils/obfuscator-plugin.js';
 
 export default defineConfig({
   plugins: [
     // Ofuscación automática en build
     obfuscatorPlugin({
       enabled: true,
-      options: {
-        compact: true,
-        controlFlowFlattening: true,
-        deadCodeInjection: true,
-        stringArray: true,
-        rotateStringArray: true
-      }
+      dropConsole: true,
+      dropDebugger: true
     })
   ],
   server: {
@@ -274,5 +278,128 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store`;
     await writeFile(path.join(dir, '.gitignore'), gitignore);
+}
+async function copyUtilityFiles(dir) {
+    // Crear image-optimizer.js
+    const imageOptimizerContent = `// Optimizador de imágenes local
+import sharp from 'sharp';
+import imagemin from 'imagemin';
+import imageminMozjpeg from 'imagemin-mozjpeg';
+import imageminPngquant from 'imagemin-pngquant';
+import imageminWebp from 'imagemin-webp';
+import { promises as fs } from 'fs';
+import path from 'path';
+
+export class ImageOptimizer {
+  constructor(options = {}) {
+    this.quality = options.quality || 85;
+    this.formats = options.formats || ['webp', 'jpeg', 'png'];
+    this.outputDir = options.outputDir || 'dist/assets';
+  }
+
+  async optimizeImage(inputPath, outputPath) {
+    try {
+      const ext = path.extname(inputPath).toLowerCase();
+      
+      if (['.jpg', '.jpeg'].includes(ext)) {
+        await this.optimizeJpeg(inputPath, outputPath);
+      } else if (ext === '.png') {
+        await this.optimizePng(inputPath, outputPath);
+      }
+      
+      // Generar versión WebP
+      if (this.formats.includes('webp')) {
+        const webpPath = outputPath.replace(/\\.(jpg|jpeg|png)$/i, '.webp');
+        await this.generateWebp(inputPath, webpPath);
+      }
+    } catch (error) {
+      console.error(\`Error optimizando \${inputPath}:\`, error);
+    }
+  }
+
+  async optimizeJpeg(inputPath, outputPath) {
+    const buffer = await imagemin([inputPath], {
+      plugins: [
+        imageminMozjpeg({ quality: this.quality })
+      ]
+    });
+    await fs.writeFile(outputPath, buffer[0].data);
+  }
+
+  async optimizePng(inputPath, outputPath) {
+    const buffer = await imagemin([inputPath], {
+      plugins: [
+        imageminPngquant({ quality: [0.6, this.quality / 100] })
+      ]
+    });
+    await fs.writeFile(outputPath, buffer[0].data);
+  }
+
+  async generateWebp(inputPath, outputPath) {
+    await sharp(inputPath)
+      .webp({ quality: this.quality })
+      .toFile(outputPath);
+  }
+}
+
+export function createImageOptimizer(options) {
+  return new ImageOptimizer(options);
+}
+`;
+    await writeFile(path.join(dir, 'utils/image-optimizer.js'), imageOptimizerContent);
+    // Crear obfuscator-plugin.js
+    const obfuscatorContent = `// Plugin de ofuscación para Vite
+import { createFilter } from '@rollup/pluginutils';
+import { minify } from 'terser';
+
+export function obfuscatorPlugin(options = {}) {
+  const filter = createFilter(
+    options.include || ['**/*.js', '**/*.ts'],
+    options.exclude || ['node_modules/**']
+  );
+
+  return {
+    name: 'obfuscator',
+    apply: 'build',
+    generateBundle: {
+      order: 'post',
+      async handler(opts, bundle) {
+        if (!options.enabled) return;
+
+        for (const [fileName, chunk] of Object.entries(bundle)) {
+          if (chunk.type === 'chunk' && filter(fileName)) {
+            try {
+              const result = await minify(chunk.code, {
+                compress: {
+                  drop_console: options.dropConsole !== false,
+                  drop_debugger: options.dropDebugger !== false,
+                  pure_funcs: ['console.log', 'console.info', 'console.debug'],
+                  ...options.compress
+                },
+                mangle: {
+                  safari10: true,
+                  ...options.mangle
+                },
+                format: {
+                  comments: false,
+                  ...options.format
+                },
+                ...options.terserOptions
+              });
+
+              if (result.code) {
+                chunk.code = result.code;
+              }
+            } catch (error) {
+              console.warn(\`Error ofuscando \${fileName}:\`, error);
+            }
+          }
+        }
+      }
+    }
+  };
+}
+`;
+    await writeFile(path.join(dir, 'utils/obfuscator-plugin.js'), obfuscatorContent);
 }
 program.parse();
