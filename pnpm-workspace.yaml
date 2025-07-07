@@ -1,5 +1,13 @@
 packages:
-  - 'packages/*'
-  - 'examples/*'
-  - 'test-project'
-  - 'test-tailwind-project'
+  - packages/*
+  - examples/*
+  - test-project
+  - test-tailwind-project
+  - packages/connextjs-unified
+
+onlyBuiltDependencies:
+  - cwebp-bin
+  - javascript-obfuscator
+  - mozjpeg
+  - pngquant-bin
+  - sharp

@@ -1,19 +1,18 @@
 {
-  "name": "connext-app",
+  "name": "test-unified-project",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "connext build",
+    "preview": "vite preview",
+    "optimize-images": "connext optimize-images"
   },
   "dependencies": {
-    "@connextjs/runtime": "^0.0.1"
+    "@owellandry/connextjs": "^0.1.0"
   },
   "devDependencies": {
-    "@connextjs/dev-server": "^0.0.1",
-    "@connextjs/vite-plugin": "^0.0.1",
     "vite": "^7.0.0",
     "typescript": "^5.8.3",
     "tailwindcss": "^3.4.0",
