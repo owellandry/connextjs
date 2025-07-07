@@ -1,0 +1,29 @@
+{
+  "name": "@connextjs/connextjs",
+  "version": "0.0.1",
+  "description": "ConnextJS - Framework completo para desarrollo web moderno",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "keywords": ["connextjs", "framework", "web", "typescript", "vite"],
+  "author": "ConnextJS Team",
+  "license": "MIT",
+  "dependencies": {
+    "@connextjs/runtime": "^0.0.1",
+    "@connextjs/compiler": "^0.0.1",
+    "@connextjs/error-handler": "^0.0.1",
+    "@connextjs/doom": "^0.0.1",
+    "@connextjs/dev-server": "^0.0.1",
+    "@connextjs/vite-plugin": "^0.0.1"
+  },
+  "peerDependencies": {
+    "vite": "^5"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
