@@ -1,10 +1,10 @@
 {
-  "name": "@connext/dev-server",
+  "name": "@connextjs/dev-server",
   "version": "0.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@connext/vite-plugin": "workspace:*",
+    "@connextjs/vite-plugin": "workspace:*",
     "vite": "^7.0.0"
   },
   "devDependencies": {
