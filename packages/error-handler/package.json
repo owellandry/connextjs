@@ -1,5 +1,5 @@
 {
-  "name": "@connext/error-handler",
+  "name": "@connextjs/error-handler",
   "version": "0.0.0",
   "description": "Error handling system for ConnextJS",
   "main": "dist/index.js",

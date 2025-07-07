@@ -1,5 +1,5 @@
 {
-  "name": "create-connext",
+  "name": "@connextjs/create-connext",
   "version": "0.0.0",
   "type": "module",
   "bin": {
