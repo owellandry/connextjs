@@ -4,6 +4,7 @@ import fsExtra from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
+import ora from "ora";
 
 const { copy, writeFile } = fsExtra;
 
@@ -20,8 +21,9 @@ program
       const __dirname = path.dirname(fileURLToPath(import.meta.url));
       const tpl = path.join(__dirname, "../../templates/basic");
       
-      // Copiar template
+      const copySpinner = ora("Copiando archivos...").start();
       await copy(tpl, dir);
+      copySpinner.succeed();
       
       // Crear vite.config.js personalizado
       const viteConfig = `import { createConnextConfig } from '@connext/dev-server';
@@ -32,7 +34,9 @@ export default createConnextConfig({
   open: true
 });`;
       
+      const configSpinner = ora("Creando vite.config.js...").start();
       await writeFile(path.join(dir, 'vite.config.js'), viteConfig);
+      configSpinner.succeed();
       
       console.log(chalk.green(`✨ Proyecto creado exitosamente en ./${dir}`));
       console.log(chalk.cyan(`\n📦 Instalar dependencias:`));
