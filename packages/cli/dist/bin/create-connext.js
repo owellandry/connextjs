@@ -4,6 +4,7 @@ import fsExtra from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
 import chalk from "chalk";
+import ora from "ora";
 const { copy, writeFile, readFile } = fsExtra;
 program
     .name("create-connext")
@@ -13,11 +14,13 @@ program
     .action(async (dir, options) => {
     try {
         console.log(chalk.blue(`\n🚀 Creando proyecto ConnextJS en ./${dir}...\n`));
+        const spinner = ora("Copiando archivos...").start();
         // Obtener la ruta del directorio actual usando una ruta relativa
         const __dirname = path.dirname(fileURLToPath(import.meta.url));
         const tpl = path.join(__dirname, "../../templates/basic");
         // Copiar template
         await copy(tpl, dir);
+        spinner.text = "Generando archivos";
         // Crear main.ts sin dependencias de ConnextJS
         const mainTsContent = `import "./index.css";
 
@@ -69,6 +72,7 @@ export default defineConfig({
   }
 });`;
         await writeFile(path.join(dir, 'vite.config.js'), viteConfig);
+        spinner.succeed("Proyecto creado");
         console.log(chalk.green(`✨ Proyecto creado exitosamente en ./${dir}`));
         console.log(chalk.cyan(`\n📦 Próximos pasos:`));
         console.log(chalk.white(`   cd ${dir}`));
