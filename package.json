@@ -1,0 +1,28 @@
+{
+  "name": "connextjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "pnpm -r --filter \"./packages/*\" run build",
+    "dev": "pnpm --filter example-hello run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.4",
+  "devDependencies": {
+    "core-js": "^3.43.0",
+    "swc": "^1.0.11",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.2"
+  },
+  "dependencies": {
+    "acorn": "^8.15.0",
+    "chalk": "^5.4.1",
+    "commander": "^14.0.0",
+    "fs-extra": "^11.3.0",
+    "magic-string": "^0.30.17"
+  }
+}

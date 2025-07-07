@@ -1,0 +1,18 @@
+{
+  "name": "@connext/error-handler",
+  "version": "0.0.0",
+  "description": "Error handling system for ConnextJS",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch"
+  },
+  "keywords": ["connext", "error", "handler"],
+  "author": "ConnextJS Team",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

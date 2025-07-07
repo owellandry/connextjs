@@ -1,0 +1,5 @@
+node_modules
+test-tailwind-project
+
+package-lock.json
+pnpm-lock.yaml
