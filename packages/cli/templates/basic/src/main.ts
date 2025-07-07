@@ -11,3 +11,6 @@ router.addRoute('/', () => {
 router.addRoute('*', () => {
   new ConnextComponent(document.getElementById("app")!, render);
 });
+
+// Ejecutar el enrutamiento inicial una vez registradas las rutas
+router.navigate(window.location.pathname, true);

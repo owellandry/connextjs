@@ -7,6 +7,9 @@
     "@types/node": "^20.0.0",
     "typescript": "^5.0.0"
   },
+  "dependencies": {
+    "@connext/error-handler": "workspace:*"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json"
   }
